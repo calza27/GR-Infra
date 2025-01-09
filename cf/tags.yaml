@@ -1,0 +1,5 @@
+---
+sec:datatype: infrastructure
+ops:name: Gift Registry
+ops:origin: github.com/calza27/GR-Infra
+client: jacinda.pullyblank

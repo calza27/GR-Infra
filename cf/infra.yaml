@@ -1,0 +1,178 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: gift registry > supporting infrastructure
+
+Resources:
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "gift-registry-images-${AWS::AccountId}"
+      VersioningConfiguration: 
+        Status: Enabled
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+
+  BucketNameParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/s3/images/name'
+      Type: String
+      Value: !Ref ImageBucket
+      Description: Name of the S3 bucket to store gift registry images in
+
+  BucketArnParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/s3/images/arn'
+      Type: String
+      Value: !GetAtt ImageBucket.Arn
+      Description: ARN of the S3 bucket to store gift registry images in
+
+  GiftDynamoDb:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: gift-registry-gifts
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+        - AttributeName: uuid
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+        - AttributeName: listId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: uuid
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: listIdIndex
+          KeySchema:
+            - AttributeName: listId
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+
+  GiftTableNameParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/ddb/gifts/name'
+      Type: String
+      Value: !Ref GiftDynamoDb
+      Description: Name of the DynamoDB table to store gifts in
+
+  GiftTableArnParam:
+      Type: AWS::SSM::Parameter
+      Properties:
+        Name: '/gift-registry/ddb/gifts/arn'
+        Type: String
+        Value: !GetAtt GiftDynamoDb.Arn
+        Description: Arn of the DynamoDB table to store gifts in
+
+  ListDynamoDb:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: gift-registry-lists
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+        - AttributeName: uuid
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: uuid
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: userIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+
+  ListsTableNameParam:
+      Type: AWS::SSM::Parameter
+      Properties:
+        Name: '/gift-registry/ddb/lists/name'
+        Type: String
+        Value: !Ref ListDynamoDb
+        Description: Name of the DynamoDB table to store lists in
+
+  ListsTableArnParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/ddb/lists/arn'
+      Type: String
+      Value: !GetAtt ListDynamoDb.Arn
+      Description: Arn of the DynamoDB table to store lists in
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: gift-registry-user-pool
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+          - Name: verified_phone_number
+            Priority: 2
+      UsernameAttributes:
+        - email
+      UsernameConfiguration:
+        CaseSensitive: false
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 10
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          PasswordHistorySize: 5
+      MfaConfiguration: "OFF"
+      UserPoolTier: ESSENTIALS
+
+  CognitoUserPoolParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/cognito/user-pool/id'
+      Type: String
+      Value: !Ref CognitoUserPool
+      Description: ID of the Cognito user pool
+
+  CognitoUserPoolArnParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/cognito/user-pool/arn'
+      Type: String
+      Value: !GetAtt CognitoUserPool.Arn
+      Description: Arn of the Cognito user pool
+
+  CognitoUserPoolUrlParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/cognito/user-pool/url'
+      Type: String
+      Value: !GetAtt CognitoUserPool.ProviderURL
+      Description: Url of the Cognito user pool
