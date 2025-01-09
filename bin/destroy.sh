@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 die() { echo "${1:-urgh}" >&2; exit "${2:-1}"; }
 
-hash aws 2>/dev/null || die "missing dep: aws"
-hash ./bin/parse-yaml.sh || die "parse-yaml.sh not found."
+hash sam 2>/dev/null || die "missing dep: sam"
 
 profile=$1
 [[ -z $profile ]] && die "Usage: $0 <profile>"

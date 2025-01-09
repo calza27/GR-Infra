@@ -2,6 +2,7 @@
 die() { echo "${$1:-urgh}" >&2; exit "${$2:-1}"; }
 
 hash aws 2>/dev/null || die "missing dep: aws"
+hash sam 2>/dev/null || die "missing dep: sam"
 hash ./bin/parse-yaml.sh || die "parse-yaml.sh not found."
 
 profile=$1
