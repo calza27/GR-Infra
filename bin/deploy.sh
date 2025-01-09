@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-die() { echo "${1:-urgh}" >&2; exit "${2:-1}"; }
+die() { echo "${$1:-urgh}" >&2; exit "${$2:-1}"; }
 
 hash aws 2>/dev/null || die "missing dep: aws"
 hash ./bin/parse-yaml.sh || die "parse-yaml.sh not found."
@@ -16,12 +16,12 @@ echo "~~~ Deploy infra stack"
 sam deploy \
   --tags "$tags" \
   --no-fail-on-empty-changeset \
-  --s3-bucket "${bucket_name}" \
-  --stack-name "${STACK_NAME}" \
-  --s3-prefix "${STACK_NAME}" \
+  --s3-bucket "$bucket_name" \
+  --stack-name "$STACK_NAME" \
+  --s3-prefix "$STACK_NAME" \
   --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" \
   --template "./cf/infra.yaml" \
   --region "ap-southeast-2" \
-  --profile "${profile}" || die "failed to deploy stack "$STACK_NAME""
+  --profile "$profile" || die "failed to deploy stack "$STACK_NAME""
 
 die "~~ cleaning up" 0

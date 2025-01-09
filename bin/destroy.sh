@@ -11,8 +11,8 @@ STACK_NAME="gr-infra"
 
 echo "~~~ Destroy infra stack"
 sam delete \
-  --stack-name "${STACK_NAME}" \
+  --stack-name "$STACK_NAME}" \
   --region "ap-southeast-2" \
-  --profile "${profile}" || die "failed to destroy stack "$STACK_NAME""
+  --profile "$profile" || die "failed to destroy stack $STACK_NAME"
 
 die "~~ cleaning up" 0
