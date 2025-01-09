@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-die() { echo "${$1:-urgh}" >&2; exit "${$2:-1}"; }
+die() { echo "${1:-urgh}" >&2; exit "${2:-1}"; }
 
 hash aws 2>/dev/null || die "missing dep: aws"
 hash sam 2>/dev/null || die "missing dep: sam"

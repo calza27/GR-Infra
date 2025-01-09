@@ -92,6 +92,8 @@ Resources:
           AttributeType: S
         - AttributeName: userId
           AttributeType: S
+        - AttributeName: sharingId
+          AttributeType: S
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
@@ -101,6 +103,17 @@ Resources:
         - IndexName: userIdIndex
           KeySchema:
             - AttributeName: userId
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: sharingIdIndex
+          KeySchema:
+            - AttributeName: sharingId
               KeyType: HASH
             - AttributeName: createdAt
               KeyType: RANGE
