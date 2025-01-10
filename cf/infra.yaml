@@ -52,14 +52,14 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       AttributeDefinitions:
-        - AttributeName: uuid
+        - AttributeName: id
           AttributeType: S
         - AttributeName: createdAt
           AttributeType: S
         - AttributeName: listId
           AttributeType: S
       KeySchema:
-        - AttributeName: uuid
+        - AttributeName: id
           KeyType: HASH
         - AttributeName: createdAt
           KeyType: RANGE
@@ -108,7 +108,7 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       AttributeDefinitions:
-        - AttributeName: uuid
+        - AttributeName: id
           AttributeType: S
         - AttributeName: createdAt
           AttributeType: S
@@ -117,7 +117,7 @@ Resources:
         - AttributeName: sharingId
           AttributeType: S
       KeySchema:
-        - AttributeName: uuid
+        - AttributeName: id
           KeyType: HASH
         - AttributeName: createdAt
           KeyType: RANGE
