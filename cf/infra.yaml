@@ -146,17 +146,17 @@ Resources:
             WriteCapacityUnits: 5
 
   ListsTableNameParam:
-      Type: AWS::SSM::Parameter
-      Properties:
-        Name: '/gift-registry/ddb/lists/name'
-        Type: String
-        Value: !Ref ListDynamoDb
-        Description: Name of the DynamoDB table to store lists in
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/ddb/lists/name'
+      Type: String
+      Value: !Ref ListDynamoDb
+      Description: Name of the DynamoDB table to store lists in
 
   ListTableUserIndexNameParam:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: '/gift-registry/ddb/gifts/user-index/name'
+      Name: '/gift-registry/ddb/lists/user-index/name'
       Type: String
       Value: userIdIndex
       Description: Name of the User index for the DynamoDB table to store lists in
@@ -164,7 +164,7 @@ Resources:
   ListTableSharingIdIndexNameParam:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: '/gift-registry/ddb/gifts/sharing-id-index/name'
+      Name: '/gift-registry/ddb/lists/sharing-id-index/name'
       Type: String
       Value: sharingIdIndex
       Description: Name of the Sharing id index for the DynamoDB table to store lists in
