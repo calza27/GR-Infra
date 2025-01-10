@@ -3,6 +3,12 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: gift registry > supporting infrastructure
 
+Parameters:
+  FileUrlDuration:
+    Type: String
+    Default: 60s
+    Description: Duration that a file URL is valid for
+
 Resources:
   ImageBucket:
     Type: AWS::S3::Bucket
@@ -29,6 +35,14 @@ Resources:
       Type: String
       Value: !GetAtt ImageBucket.Arn
       Description: ARN of the S3 bucket to store gift registry images in
+
+  UrlLifespanParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/s3/images/url-lifespan'
+      Type: String
+      Value: !Ref FileUrlDuration
+      Description: Lifepsan of the presigned URLs generated for images in the S3 bucket
 
   GiftDynamoDb:
     Type: AWS::DynamoDB::Table
