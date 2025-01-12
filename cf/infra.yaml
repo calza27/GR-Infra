@@ -36,6 +36,52 @@ Resources:
       Value: !GetAtt ImageBucket.Arn
       Description: ARN of the S3 bucket to store gift registry images in
 
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "gift-registry-website-${AWS::AccountId}"
+      VersioningConfiguration: 
+        Status: Enabled
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - s3:GetObject
+            Resource: !Sub '${WebsiteBucket.Arn}/*'
+
+  WebsiteBucketNameParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/s3/website/name'
+      Type: String
+      Value: !Ref WebsiteBucket
+      Description: Name of the S3 bucket to store gift registry website in
+
+  WebsiteBucketArnParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/gift-registry/s3/website/arn'
+      Type: String
+      Value: !GetAtt WebsiteBucket.Arn
+      Description: ARN of the S3 bucket to store gift registry website in
+
   UrlLifespanParam:
     Type: AWS::SSM::Parameter
     Properties:
