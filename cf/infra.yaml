@@ -46,12 +46,17 @@ Resources:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        IgnorePublicAcls: false
-        BlockPublicPolicy: false
-        RestrictPublicBuckets: false
-      WebsiteConfiguration:
-        IndexDocument: index.html
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      # PublicAccessBlockConfiguration:
+      #   BlockPublicAcls: false
+      #   IgnorePublicAcls: false
+      #   BlockPublicPolicy: false
+      #   RestrictPublicBuckets: false
+      # WebsiteConfiguration:
+      #   IndexDocument: index.html
 
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
